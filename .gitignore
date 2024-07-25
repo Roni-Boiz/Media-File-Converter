@@ -1,5 +1,5 @@
 .vscode/
-auth/venv/
-converter/venv/
-gateway/venv/
-notification/venv/
+python/src/auth/venv/
+python/src/converter/venv/
+python/src/gateway/venv/
+python/src/notification/venv/
