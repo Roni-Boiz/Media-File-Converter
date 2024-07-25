@@ -1,0 +1,11 @@
+prefix=/home/ronila/Desktop/Projects/MediaFileConverter_MicroserviceArchitecture[Python+Docker+Kubernetes]/python/src/gateway/venv
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+toolexeclibdir=${libdir}
+includedir=/home/ronila/Desktop/Projects/MediaFileConverter_MicroserviceArchitecture[Python+Docker+Kubernetes]/python/src/gateway/venv/include
+
+Name: libffi
+Description: Library supporting Foreign Function Interfaces
+Version: 3.4.4
+Libs: -L${toolexeclibdir} -lffi
+Cflags: -I${includedir}

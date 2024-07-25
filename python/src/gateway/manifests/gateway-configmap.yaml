@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gateway-configmap
+data:
+  AUTH_SVC_ADDRESS: "auth:5000"
+  MP3_QUEUE: "mp3"
+  VIDEO_QUEUE: "video"
+  client-max-body-size: "20m"
+  proxy-body-size: "20m"
