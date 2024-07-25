@@ -55,7 +55,7 @@ Follow these steps to deploy your microservice application:
 
 - **Set DNS Names:**
     ```
-    miniqube start
+    minikube start
 
     minikube ip
 

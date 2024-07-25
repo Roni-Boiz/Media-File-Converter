@@ -18,7 +18,7 @@ $ pip freeze > requirements.txt
 ```
 
 ```
-miniqube start
+minikube start
 
 minikube ip
 
