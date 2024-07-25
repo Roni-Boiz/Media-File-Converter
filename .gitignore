@@ -1,0 +1,5 @@
+.vscode/
+auth/venv/
+converter/venv/
+gateway/venv/
+notification/venv/
