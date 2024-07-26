@@ -7,7 +7,7 @@ Converting mp4 videos to mp3 in a microservices architecture.
   <img src="./Project documentation/ProjectArchitecture.png" width="600" title="Architecture" alt="Architecture">
   </p> -->
 
-## Deploying a Python-based Microservice Application on AWS EKS
+## Deploying a Python-based Microservice Application on Minikube Kuerentes Cluster
 
 ### Introduction
 
@@ -43,7 +43,7 @@ Follow these steps to deploy your microservice application:
 
 5. **Application Validation:** Verify the status of all components by running:
    ```bash
-   kubectl get all
+   $ kubectl get all
    ```
 
 6. **Destroying the Infrastructure** 
@@ -55,13 +55,13 @@ Follow these steps to deploy your microservice application:
 
 - **Set DNS Names:**
     ```
-    minikube start
+    $ minikube start
 
-    minikube ip
+    $ minikube ip
 
-    minikube addons list
+    $ minikube addons list
 
-    minikube addons enable ingress
+    $ minikube addons enable ingress
     ```
 
     ```
@@ -79,32 +79,32 @@ Follow these steps to deploy your microservice application:
 
 - **Auth Service:**
   ```
-  cd auth/manifests
-  kubectl apply -f .
+  $ cd auth/manifests
+  $ kubectl apply -f .
   ```
 
 - **Gateway Service:**
   ```
-  cd gateway/manifests
-  kubectl apply -f .
+  $ cd gateway/manifests
+  $ kubectl apply -f .
   ```
 
 - **Converter Service:**
   ```
-  cd converter/manifests
-  kubectl apply -f .
+  $ cd converter/manifests
+  $ kubectl apply -f .
   ```
 
 - **Notification Service:**
   ```
-  cd notification/manifests
-  kubectl apply -f .
+  $ cd notification/manifests
+  $ kubectl apply -f .
   ```
 
   - **rabbitmq Service:**
   ```
-  cd rabbit/manifests
-  kubectl apply -f .
+  $ cd rabbit/manifests
+  $ kubectl apply -f .
   ```
 
 ### Application Validation
@@ -112,7 +112,7 @@ Follow these steps to deploy your microservice application:
 After deploying the microservices, verify the status of all components by running:
 
 ```
-kubectl get all
+$ kubectl get all
 ```
 
 ### Notification Configuration
@@ -173,35 +173,35 @@ Run the application through the following API calls:
 
 - **Auth Service:**
   ```
-  cd auth/manifests
-  kubectl delete -f .
+  $ cd auth/manifests
+  $ kubectl delete -f .
   ```
 
 - **Gateway Service:**
   ```
-  cd gateway/manifests
-  kubectl delete -f .
+  $ cd gateway/manifests
+  $ kubectl delete -f .
   ```
 
 - **Converter Service:**
   ```
-  cd converter/manifests
-  kubectl delete -f .
+  $ cd converter/manifests
+  $ kubectl delete -f .
   ```
 
 - **Notification Service:**
   ```
-  cd notification/manifests
-  kubectl delete -f .
+  $ cd notification/manifests
+  $ kubectl delete -f .
   ```
 
 - **rabbitmq Service:**
   ```
-  cd rabbit/manifests
-  kubectl delete -f .
+  $ cd rabbit/manifests
+  $ kubectl delete -f .
   ```
 
 - **minikube:**
   ```
-  minikube delete --all
+  $ minikube delete --all
   ```
