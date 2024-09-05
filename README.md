@@ -11,7 +11,7 @@ Converting mp4 videos to mp3 in a microservices architecture.
 
 ### Introduction
 
-This document provides a step-by-step guide for deploying a Python-based microservice application on Kubernetes (minikube). The application comprises four major microservices: `gateway`, `auth`, `converter`, `rabbitmq`, and `notification`.
+This document provides a step-by-step guide for deploying a Python-based microservice application on Kubernetes (minikube). The application comprises five major microservices: `gateway`, `auth`, `converter`, `rabbitmq`, and `notification`.
 
 ### Prerequisites
 
