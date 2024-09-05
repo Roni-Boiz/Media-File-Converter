@@ -101,7 +101,7 @@ Follow these steps to deploy your microservice application:
   $ kubectl apply -f .
   ```
 
-  **rabbitmq Service:**
+- **rabbitmq Service:**
   ```
   $ cd rabbit/manifests
   $ kubectl apply -f .
