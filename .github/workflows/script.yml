@@ -233,8 +233,8 @@ jobs:
       - name: Install Kubectl
         if: env.k9s_installed == 'false'
         run: |
-          sudo apt install snapd -y
-          sudo snap install k9s -y
+          sudo apt install -y snapd
+          sudo snap install -y k9s
           echo "k9s_installed=true" >> $GITHUB_ENV
           echo "K9s installed successfully!"
 
