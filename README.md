@@ -31,22 +31,27 @@ Follow these steps to deploy your microservice application:
 
 1. **MongoDB and MySQL Setup:** Create databases and enable automatic connections to them.
 
-2. **RabbitMQ Deployment:** Deploy RabbitMQ for message queuing, which is required for the `converter`.
+   navigae to auth (python/src/auth) directory
+   ```bash
+   mysql -u root -p < init.sql
+   ```
 
-3. **Create Queues in RabbitMQ:** Before deploying the `converter`, create two queues in RabbitMQ: `mp3` and `video`. (will create them automatically, manually create them if you have delete them by change)
+3. **RabbitMQ Deployment:** Deploy RabbitMQ for message queuing, which is required for the `converter`.
 
-4. **Deploy Microservices:**
-   - **auth:** Navigate to the `auth` folder and apply the 'sql' configuration then deploy the `auth`.
+4. **Create Queues in RabbitMQ:** Before deploying the `converter`, create two queues in RabbitMQ: `mp3` and `video`. (will create them automatically, manually create them if you have delete them by change)
+
+5. **Deploy Microservices:**
+   - **auth:** Deploy the `auth`.
    - **gateway:** Deploy the `gateway`.
    - **converter:** Deploy the `converter`.
    - **notification:** Configure email for notifications and two-factor authentication (2FA). Make sure to provide your email and app-password in `notification/manifests/notification-secret.yaml` then deploy the `notification`
 
-5. **Application Validation:** Verify the status of all components by running:
+6. **Application Validation:** Verify the status of all components by running:
    ```bash
    $ kubectl get all
    ```
 
-6. **Destroying the Infrastructure** 
+7. **Destroying the Infrastructure** 
 
 
 ### Low Level Steps
