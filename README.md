@@ -11,7 +11,7 @@ Converting mp4 videos to mp3 in a microservices architecture.
 
 ### Introduction
 
-This document provides a step-by-step guide for deploying a Python-based microservice application on Kubernetes (minikube). The application comprises four major microservices: `auth`, `converter`, `database` (MySQL and MongoDB), and `notification`.
+This document provides a step-by-step guide for deploying a Python-based microservice application on Kubernetes (minikube). The application comprises four major microservices: `gateway`, `auth`, `converter`, `rabbitmq`, and `notification`.
 
 ### Prerequisites
 
@@ -33,13 +33,13 @@ Follow these steps to deploy your microservice application:
 
 2. **RabbitMQ Deployment:** Deploy RabbitMQ for message queuing, which is required for the `converter`.
 
-3. **Create Queues in RabbitMQ:** Before deploying the `converter`, create two queues in RabbitMQ: `mp3` and `video`.
+3. **Create Queues in RabbitMQ:** Before deploying the `converter`, create two queues in RabbitMQ: `mp3` and `video`. (will create them automatically, manually create them if you have delete them by change)
 
 4. **Deploy Microservices:**
-   - **auth:** Navigate to the `auth` manifest folder and apply the configuration.
+   - **auth:** Navigate to the `auth` folder and apply the 'sql' configuration then deploy the `auth`.
    - **gateway:** Deploy the `gateway`.
    - **converter:** Deploy the `converter`.
-   - **notification:** Configure email for notifications and two-factor authentication (2FA). Make sure to provide your email and app-password in `notification/manifests/notification-secret.yaml`.
+   - **notification:** Configure email for notifications and two-factor authentication (2FA). Make sure to provide your email and app-password in `notification/manifests/notification-secret.yaml` then deploy the `notification`
 
 5. **Application Validation:** Verify the status of all components by running:
    ```bash
@@ -75,7 +75,7 @@ Follow these steps to deploy your microservice application:
 
 #### Cluster Creation
 
-### Apply the manifest files for each microservice:
+##### Apply the manifest files for each microservice:
 
 - **Auth Service:**
   ```
@@ -107,7 +107,7 @@ Follow these steps to deploy your microservice application:
   $ kubectl apply -f .
   ```
 
-### Application Validation
+#### Application Validation
 
 After deploying the microservices, verify the status of all components by running:
 
