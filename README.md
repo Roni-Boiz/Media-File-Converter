@@ -1,4 +1,4 @@
-# DevOps Project: video-converter
+# DevOps Project: Video-Audio-Converter
 Converting mp4 videos to mp3 in a microservices architecture.
 
 <!-- ## Architecture
