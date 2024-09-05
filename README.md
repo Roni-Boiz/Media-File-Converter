@@ -1,4 +1,4 @@
-# Devops Project: video-converter
+# DevOps Project: Video-Audio-Converter
 Converting mp4 videos to mp3 in a microservices architecture.
 
 <!-- ## Architecture
@@ -7,11 +7,11 @@ Converting mp4 videos to mp3 in a microservices architecture.
   <img src="./Project documentation/ProjectArchitecture.png" width="600" title="Architecture" alt="Architecture">
   </p> -->
 
-## Deploying a Python-based Microservice Application on AWS EKS
+## Deploying a Python-based Microservice Application on Minikube Kubernetes Cluster
 
 ### Introduction
 
-This document provides a step-by-step guide for deploying a Python-based microservice application on Kubernetes (minikube). The application comprises four major microservices: `auth`, `converter`, `database` (MySQL and MongoDB), and `notification`.
+This document provides a step-by-step guide for deploying a Python-based microservice application on Kubernetes (minikube). The application comprises five major microservices: `gateway`, `auth`, `converter`, `rabbitmq`, and `notification`.
 
 ### Prerequisites
 
@@ -31,22 +31,27 @@ Follow these steps to deploy your microservice application:
 
 1. **MongoDB and MySQL Setup:** Create databases and enable automatic connections to them.
 
-2. **RabbitMQ Deployment:** Deploy RabbitMQ for message queuing, which is required for the `converter`.
-
-3. **Create Queues in RabbitMQ:** Before deploying the `converter`, create two queues in RabbitMQ: `mp3` and `video`.
-
-4. **Deploy Microservices:**
-   - **auth:** Navigate to the `auth` manifest folder and apply the configuration.
-   - **gateway:** Deploy the `gateway`.
-   - **converter:** Deploy the `converter`.
-   - **notification:** Configure email for notifications and two-factor authentication (2FA). Make sure to provide your email and app-password in `notification/manifests/notification-secret.yaml`.
-
-5. **Application Validation:** Verify the status of all components by running:
+   navigae to auth (python/src/auth) directory
    ```bash
-   kubectl get all
+   mysql -u root -p < init.sql
    ```
 
-6. **Destroying the Infrastructure** 
+3. **RabbitMQ Deployment:** Deploy RabbitMQ for message queuing, which is required for the `converter`.
+
+4. **Create Queues in RabbitMQ:** Before deploying the `converter`, create two queues in RabbitMQ: `mp3` and `video`. (will create them automatically, manually create them if you have delete them by change)
+
+5. **Deploy Microservices:**
+   - **auth:** Deploy the `auth`.
+   - **gateway:** Deploy the `gateway`.
+   - **converter:** Deploy the `converter`.
+   - **notification:** Configure email for notifications and two-factor authentication (2FA). Make sure to provide your email and app-password in `notification/manifests/notification-secret.yaml` then deploy the `notification`
+
+6. **Application Validation:** Verify the status of all components by running:
+   ```bash
+   $ kubectl get all
+   ```
+
+7. **Destroying the Infrastructure** 
 
 
 ### Low Level Steps
@@ -55,13 +60,13 @@ Follow these steps to deploy your microservice application:
 
 - **Set DNS Names:**
     ```
-    minikube start
+    $ minikube start
 
-    minikube ip
+    $ minikube ip
 
-    minikube addons list
+    $ minikube addons list
 
-    minikube addons enable ingress
+    $ minikube addons enable ingress
     ```
 
     ```
@@ -75,44 +80,44 @@ Follow these steps to deploy your microservice application:
 
 #### Cluster Creation
 
-### Apply the manifest files for each microservice:
+##### Apply the manifest files for each microservice:
 
 - **Auth Service:**
   ```
-  cd auth/manifests
-  kubectl apply -f .
+  $ cd auth/manifests
+  $ kubectl apply -f .
   ```
 
 - **Gateway Service:**
   ```
-  cd gateway/manifests
-  kubectl apply -f .
+  $ cd gateway/manifests
+  $ kubectl apply -f .
   ```
 
 - **Converter Service:**
   ```
-  cd converter/manifests
-  kubectl apply -f .
+  $ cd converter/manifests
+  $ kubectl apply -f .
   ```
 
 - **Notification Service:**
   ```
-  cd notification/manifests
-  kubectl apply -f .
+  $ cd notification/manifests
+  $ kubectl apply -f .
   ```
 
-  - **rabbitmq Service:**
+- **rabbitmq Service:**
   ```
-  cd rabbit/manifests
-  kubectl apply -f .
+  $ cd rabbit/manifests
+  $ kubectl apply -f .
   ```
 
-### Application Validation
+#### Application Validation
 
 After deploying the microservices, verify the status of all components by running:
 
 ```
-kubectl get all
+$ kubectl get all
 ```
 
 ### Notification Configuration
@@ -173,35 +178,35 @@ Run the application through the following API calls:
 
 - **Auth Service:**
   ```
-  cd auth/manifests
-  kubectl delete -f .
+  $ cd auth/manifests
+  $ kubectl delete -f .
   ```
 
 - **Gateway Service:**
   ```
-  cd gateway/manifests
-  kubectl delete -f .
+  $ cd gateway/manifests
+  $ kubectl delete -f .
   ```
 
 - **Converter Service:**
   ```
-  cd converter/manifests
-  kubectl delete -f .
+  $ cd converter/manifests
+  $ kubectl delete -f .
   ```
 
 - **Notification Service:**
   ```
-  cd notification/manifests
-  kubectl delete -f .
+  $ cd notification/manifests
+  $ kubectl delete -f .
   ```
 
 - **rabbitmq Service:**
   ```
-  cd rabbit/manifests
-  kubectl delete -f .
+  $ cd rabbit/manifests
+  $ kubectl delete -f .
   ```
 
 - **minikube:**
   ```
-  minikube delete --all
+  $ minikube delete --all
   ```
