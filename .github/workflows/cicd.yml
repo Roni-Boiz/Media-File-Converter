@@ -21,7 +21,7 @@ jobs:
       - name: Setup Minikube
         id: setup-minikube
         run: |
-          STATUS=$(minikube status)
+          STATUS=$(minikube status --format "{{.Host}}")
           if "$STATUS" == "Running"; then
             echo "Minikube is already running."
           else
@@ -29,7 +29,7 @@ jobs:
             minikube addons enable ingress
           fi
 
-      - name: Read minikube IP
+      - name: Read Minikube IP
         id: minikube-ip
         run: |
           MINIKUBE_IP=$(minikube ip)
