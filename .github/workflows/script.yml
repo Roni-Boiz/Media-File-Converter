@@ -233,8 +233,8 @@ jobs:
       - name: Install K9s
         if: env.k9s_installed == 'false'
         run: |
-          sudo apt install snapd
-          sudo snap install k9s --channel=latest/stable
+          sudo curl -sS https://webinstall.dev/k9s | bash
+          sudo source ~/.config/envman/PATH.env
           echo "k9s_installed=true" >> $GITHUB_ENV
           echo "K9s installed successfully!"
 
