@@ -1,0 +1,33 @@
+name: Destroy
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-analyze-scan:
+    name: Destroy
+    runs-on: [self-hosted, git-workflow]
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+  
+      - name: Destroy Containers
+        id: destroy-containers
+        run: | 
+          docker stop $(docker ps -q) || true
+          docker rm $(docker ps -aq) || true
+
+      - name: Destroy Kubernetes Deployments
+        id: destroy-from-k8s
+        run: |
+          kubectl delete -f python/src/auth/manifests/ || true
+          kubectl delete -f python/src/gateway/manifests/ || true
+          kubectl delete -f python/src/converter/manifests/ || true
+          kubectl delete -f python/src/notification/manifests/ || true
+          kubectl delete -f python/src/rabbit/manifests/ || true
+
+      - name: Destry Kubernetes CLuster
+        id: destry-cluster
+        run: minikube delete --all
