@@ -28,7 +28,7 @@ jobs:
             minikube start
             minikube addons enable ingress
           fi
-        shell: bash
+        shell: /usr/bin/bash --noprofile --norc -e -o pipefail
 
       - name: Read Minikube IP
         id: minikube-ip
