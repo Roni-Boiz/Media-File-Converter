@@ -1,6 +1,9 @@
 name: CI/CD Pipeline
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
@@ -22,13 +25,15 @@ jobs:
         id: setup-minikube
         run: |
           STATUS=$(minikube status --format "{{.Host}}")
-          if [["$STATUS" == "Running"]]; then
+          echo "Minikube status: $STATUS"
+          
+          if [[ "$STATUS" == "Running" ]]; then
             echo "Minikube is already running."
           else
             minikube start
             minikube addons enable ingress
           fi
-        shell: /usr/bin/bash --noprofile --norc -e -o pipefail
+        shell: bash
 
       - name: Read Minikube IP
         id: minikube-ip
