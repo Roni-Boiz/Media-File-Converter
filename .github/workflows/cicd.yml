@@ -21,9 +21,9 @@ jobs:
       - name: Setup Minikube
         id: setup-minikube
         run: |
-          status=$(minikube status)
+           STATUS=$(minikube status)
 
-          if $status == "Running"; then
+          if $STATUS == "Running"; then
             echo "Minikube is already running."
           else
             minikube start
@@ -34,8 +34,7 @@ jobs:
         id: minikube-ip
         run: |
           MINIKUBE_IP=$(minikube ip)
-          echo "MINIKUBE_IP=$CONTAINER_IP" >> $GITHUB_ENV 
-          echo "Minikube IP is $MINIKUBE_IP"
+          echo "Minikube IP is env.MINIKUBE_IP"
 
       - name: Setup Hosts
         id: setup-hosts
