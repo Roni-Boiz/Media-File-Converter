@@ -1,0 +1,168 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_run:
+    workflows: ["Script"]
+    types: [completed]
+    status: success
+  workflow_dispatch:
+
+jobs:
+  setup:
+    name: Setup
+    runs-on: [self-hosted, git-workflow]
+    steps:
+      - name: Checkout Code
+        id: checkout-code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup MySQL
+        id: setup-mysql
+        run: sudo mysql -u root < python/src/auth/init.sql
+
+      - name: Setup Minikube
+        id: setup-minikube
+        run: |
+          minikube start
+          minikube addons enable ingress
+
+      - name: Read minikube IP
+        id: minikube-ip
+        run: |
+          MINIKUBE_IP=$(minikube ip)
+          echo "MINIKUBE_IP=$CONTAINER_IP" >> $GITHUB_ENV 
+          echo "Minikube IP is $MINIKUBE_IP"
+
+      - name: Setup Hosts
+        id: setup-hosts
+        run: |
+          sudo awk -v minikube_ip="$MINIKUBE_IP" '
+            BEGIN {
+              # Define the desired entries for Minikube
+              entries["kubernetes-mp3converter.com"] = 1
+              entries["kubernetes-rabbitmq-manager.com"] = 1
+            }
+            {
+              # Print existing lines as they are
+              print
+              
+              # Check if an entry exists and mark it as found
+              for (entry in entries) {
+                if ($2 == entry) {
+                  delete entries[entry]
+                }
+              }
+            }
+            END {
+              # Add only the missing entries
+              for (entry in entries) {
+                print minikube_ip, entry
+              }
+            }
+          ' /etc/hosts > /tmp/hosts.tmp && sudo mv /tmp/hosts.tmp /etc/hosts
+
+  build:
+    name: Build
+    needs: Setup
+    runs-on: [self-hosted, git-workflow]
+    steps:
+      - name: Checkout Code
+        id: checkout-code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Build and Analyze with SonarQube
+        id: sonarqube-analyze
+        uses: sonarsource/sonarqube-scan-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+      - name: Trivy File Scan
+        id: trivy-file-scan
+        run: |
+          trivy fs . > trivyfs.txt
+          cat trivyfs.txt
+
+      - name: Docker Build
+        id: docker-build
+        run: |
+          docker build -f python/src/auth/Dockerfile -t media-auth:latest .
+          docker build -f python/src/auth//Dockerfile -t media-converter:latest .
+          docker build -f python/src/auth//Dockerfile -t media-gateway:latest .
+          docker build -f python/src/auth//Dockerfile -t media-notification:latest .
+
+        env:
+          DOCKER_CLI_ACI: 1
+
+      - name: Docker Push
+        id: docker-push
+        run: |
+          docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
+
+          docker tag media-auth:latest don361/media-auth:latest
+          docker tag media-converter:latest don361/media-converter:latest
+          docker tag media-gateway:latest don361/media-gateway:latest
+          docker tag media-notification:latest don361/media-notification:latest
+          
+          # docker push don361/media-auth:latest
+          # docker push don361/media-converter:latest
+          # docker push don361/media-gateway:latest
+          # docker push don361/media-notification:latest
+        env:
+          DOCKER_CLI_ACI: 1
+
+  deploy:
+    name: Deploy
+    needs: Build 
+    runs-on: [self-hosted, git-workflow]
+    steps:
+      - name: Docker Pull
+        id: docker-pull
+        run: |
+          docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
+          
+          # docker pull don361/media-auth:latest
+          # docker pull don361/media-converter:latest
+          # docker pull don361/media-gateway:latest
+          # docker pull don361/media-notification:latest
+
+      - name: Trivy Image scan
+        id: trivy-image-scan
+        run: |
+          trivy image don361/media-auth:latest
+          trivy image don361/media-converter:latest
+          trivy image don361/media-gateway:latest
+          trivy image don361/media-notification:latest
+
+      - name: Stop and Remove Old Container
+        id: remove-old-container
+        run: |
+          docker stop $(docker ps -q) || true
+          docker rm $(docker ps -aq) || true
+
+      - name: Prune Unused Docker Images
+        id: docker-prune
+        run: docker image prune -a -f
+
+      - name: Deploy to Kubernetes
+        id: deploy-to-k8s
+        run: |
+          kubectl apply -f python/src/auth/manifests/
+          kubectl apply -f python/src/gateway/manifests/
+          kubectl apply -f python/src/converter/manifests/
+          kubectl apply -f python/src/notification/manifests/
+          kubectl apply -f python/src/rabbit/manifests/
+
+      - name: Verify The Status
+        id: k8s-status
+        run: kubectl get all
