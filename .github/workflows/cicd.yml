@@ -1,16 +1,6 @@
 name: CI/CD Pipeline
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-  workflow_run:
-    workflows: ["Script"]
-    types: [completed]
-    status: success
   workflow_dispatch:
 
 jobs:
@@ -31,8 +21,14 @@ jobs:
       - name: Setup Minikube
         id: setup-minikube
         run: |
-          minikube start
-          minikube addons enable ingress
+          status=$(minikube status --format "{{.Host}}")
+
+          if [[ "$status" == "Running" ]]; then
+            echo "Minikube is already running."
+          else
+            minikube start
+            minikube addons enable ingress
+          fi
 
       - name: Read minikube IP
         id: minikube-ip
