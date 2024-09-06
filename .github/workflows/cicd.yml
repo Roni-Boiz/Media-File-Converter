@@ -170,9 +170,9 @@ jobs:
         run: kubectl get all
 
       - name: Setup Minikube
-          id: setup-minikube
-          run: |
-            if [[ "$(minikube status --format "{{.Host}}")" == "Running" ]]; then
-              nohup minikube tunnel
-            fi
-          shell: bash
+        id: setup-minikube
+        run: |
+          if [[ "$(minikube status --format "{{.Host}}")" == "Running" ]]; then
+            nohup minikube tunnel
+          fi
+        shell: bash
