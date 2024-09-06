@@ -25,3 +25,7 @@ jobs:
       - name: Destry Kubernetes CLuster
         id: destry-cluster
         run: minikube delete --all
+
+      - name: Prune Unused Docker Images
+        id: prune-unuse-images
+        run: docker image prune -a -f

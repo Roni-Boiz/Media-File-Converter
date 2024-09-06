@@ -42,8 +42,8 @@ jobs:
           sudo awk -v minikube_ip="$MINIKUBE_IP" '
             BEGIN {
               # Define the desired entries for Minikube
-              entries["kubernetes-mp3converter.com"] = 1
-              entries["kubernetes-rabbitmq-manager.com"] = 1
+              minikube_entries["kubernetes-mp3converter.com"] = 1
+              minikube_entries["kubernetes-rabbitmq-manager.com"] = 1
 
               # Define the additional entries
               additional_entries["127.0.0.1"] = "kubernetes.docker.internal host.minikube.internal"
@@ -53,10 +53,8 @@ jobs:
               print
               
               # Check if an entry exists and mark it as found
-              for (entry in entries) {
-                if ($2 == entry) {
-                  delete entries[entry]
-                }
+              if ($1 == minikube_ip && ($2 in minikube_entries)) {
+                delete minikube_entries[$2]
               }
 
               # Check for additional entries
@@ -70,17 +68,27 @@ jobs:
               }
             }
             END {
-              # Add only the missing entries
-              for (entry in entries) {
+              # Add missing Minikube entries
+              for (entry in minikube_entries) {
                 print minikube_ip, entry
               }
               
               # Add additional entries if missing
               for (ip in additional_entries) {
-                print ip, additional_entries[ip]
+                split(additional_entries[ip], names, " ")
+                for (name in names) {
+                  print ip, names[name]
+                }
               }
             }
           ' /etc/hosts > /tmp/hosts.tmp && sudo mv /tmp/hosts.tmp /etc/hosts
+
+      - name: Setup Binds
+        id: setup-binds
+        run: |
+          CONFIG_FILE="/etc/mysql/mysql.conf.d/mysqld.cnf"
+          sudo sed -i 's/^[[:space:]]*bind-address[[:space:]]*=[[:space:]]*.*$/bind-address = 0.0.0.0/' $CONFIG_FILE
+          sudo sed -i 's/^[[:space:]]*mysqlx-bind-address[[:space:]]*=[[:space:]]*.*$/mysqlx-bind-address = 0.0.0.0/' $CONFIG_FILE
 
   build:
     name: Build
@@ -132,6 +140,10 @@ jobs:
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/media-notification:latest
         env:
           DOCKER_CLI_ACI: 1
+    
+      - name: Prune Untag Docker Images
+        id: prune-untag-images
+        run: docker images -f "dangling=true" -q | xargs docker rmi
 
   deploy:
     name: Deploy
@@ -169,10 +181,10 @@ jobs:
         id: k8s-status
         run: kubectl get all
 
-      - name: Setup Minikube
-        id: setup-minikube
+      - name: Start Tunnel
+        id: start-tunnel
         run: |
           if [[ "$(minikube status --format "{{.Host}}")" == "Running" ]]; then
-            nohup minikube tunnel
+            nohup minikube tunnel &
           fi
         shell: bash
