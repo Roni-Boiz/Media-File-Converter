@@ -234,7 +234,7 @@ jobs:
         if: env.k9s_installed == 'false'
         run: |
           sudo apt install snapd
-          sudo snap install k9s
+          sudo snap install k9s --channel=latest/stable
           echo "k9s_installed=true" >> $GITHUB_ENV
           echo "K9s installed successfully!"
 
