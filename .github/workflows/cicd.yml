@@ -93,10 +93,10 @@ jobs:
       - name: Docker Build
         id: docker-build
         run: |
-          docker build -f python/src/auth/Dockerfile -t media-auth:latest .
-          docker build -f python/src/auth//Dockerfile -t media-converter:latest .
-          docker build -f python/src/auth//Dockerfile -t media-gateway:latest .
-          docker build -f python/src/auth//Dockerfile -t media-notification:latest .
+          docker build -f python/src/auth/Dockerfile -t media-auth:latest python/src/auth/
+          docker build -f python/src/converter/Dockerfile -t media-converter:latest python/src/converter/
+          docker build -f python/src/gateway/Dockerfile -t media-gateway:latest python/src/gateway/
+          docker build -f python/src/notification/Dockerfile -t media-notification:latest python/src/notification/
 
         env:
           DOCKER_CLI_ACI: 1
