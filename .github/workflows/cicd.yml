@@ -141,9 +141,9 @@ jobs:
         env:
           DOCKER_CLI_ACI: 1
     
-      - name: Prune Untag Docker Images
-        id: prune-untag-images
-        run: docker images -f "dangling=true" -q | xargs docker rmi
+      - name: Prune Dangling Docker Images
+        id: prune-dangling-images
+        run: docker images -f "dangling=true" -q | xargs -r docker rmi
 
   deploy:
     name: Deploy
