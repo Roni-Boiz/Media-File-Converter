@@ -24,8 +24,7 @@ jobs:
           if [[ "$(minikube status --format "{{.Host}}")" == "Running" ]]; then
             echo "Minikube is already running."
           else
-            nohup minikube start &
-            sleep 60
+            nohup minikube start
             minikube addons enable ingress
           fi
         shell: bash
@@ -138,16 +137,6 @@ jobs:
           trivy image ${{ secrets.DOCKERHUB_USERNAME }}/media-converter:latest
           trivy image ${{ secrets.DOCKERHUB_USERNAME }}/media-gateway:latest
           trivy image ${{ secrets.DOCKERHUB_USERNAME }}/media-notification:latest
-
-      - name: Stop and Remove Old Container
-        id: remove-old-container
-        run: |
-          docker stop $(docker ps -q) || true
-          docker rm $(docker ps -aq) || true
-
-      - name: Prune Unused Docker Images
-        id: docker-prune
-        run: docker image prune -a -f
 
       - name: Deploy to Kubernetes
         id: deploy-to-k8s
