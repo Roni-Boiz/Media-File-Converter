@@ -1,8 +1,8 @@
-CREATE USER IF NOT EXISTS 'auth_user'@'localhost' IDENTIFIED BY 'authuser123';
+CREATE USER IF NOT EXISTS 'auth_user'@'%' IDENTIFIED BY 'authuser123';
 
 CREATE DATABASE IF NOT EXISTS auth;
 
-GRANT ALL PRIVILEGES ON auth.* TO 'auth_user'@'localhost';
+GRANT ALL PRIVILEGES ON auth.* TO 'auth_user'@'%';
 
 use auth;
 
