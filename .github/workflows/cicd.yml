@@ -36,6 +36,7 @@ jobs:
         id: minikube-ip
         run: |
           MINIKUBE_IP=$(minikube ip)
+          echo "MINIKUBE_IP=$MINIKUBE_IP" >> $GITHUB_ENV 
           echo "Minikube IP is $MINIKUBE_IP"
 
       - name: Setup Hosts
@@ -97,7 +98,6 @@ jobs:
           docker build -f python/src/converter/Dockerfile -t media-converter:latest python/src/converter/
           docker build -f python/src/gateway/Dockerfile -t media-gateway:latest python/src/gateway/
           docker build -f python/src/notification/Dockerfile -t media-notification:latest python/src/notification/
-
         env:
           DOCKER_CLI_ACI: 1
 
@@ -106,15 +106,15 @@ jobs:
         run: |
           docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
 
-          docker tag media-auth:latest don361/media-auth:latest
-          docker tag media-converter:latest don361/media-converter:latest
-          docker tag media-gateway:latest don361/media-gateway:latest
-          docker tag media-notification:latest don361/media-notification:latest
+          docker tag media-auth:latest $DOCKERHUB_USERNAME/media-auth:latest
+          docker tag media-converter:latest $DOCKERHUB_USERNAME/media-converter:latest
+          docker tag media-gateway:latest $DOCKERHUB_USERNAME/media-gateway:latest
+          docker tag media-notification:latest $DOCKERHUB_USERNAME/media-notification:latest
           
-          # docker push don361/media-auth:latest
-          # docker push don361/media-converter:latest
-          # docker push don361/media-gateway:latest
-          # docker push don361/media-notification:latest
+          # docker push $DOCKERHUB_USERNAME/media-auth:latest
+          # docker push $DOCKERHUB_USERNAME/media-converter:latest
+          # docker push $DOCKERHUB_USERNAME/media-gateway:latest
+          # docker push $DOCKERHUB_USERNAME/media-notification:latest
         env:
           DOCKER_CLI_ACI: 1
 
@@ -128,18 +128,18 @@ jobs:
         run: |
           docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
           
-          # docker pull don361/media-auth:latest
-          # docker pull don361/media-converter:latest
-          # docker pull don361/media-gateway:latest
-          # docker pull don361/media-notification:latest
+          # docker pull $DOCKERHUB_USERNAME/media-auth:latest
+          # docker pull $DOCKERHUB_USERNAME/media-converter:latest
+          # docker pull $DOCKERHUB_USERNAME/media-gateway:latest
+          # docker pull $DOCKERHUB_USERNAME/media-notification:latest
 
       - name: Trivy Image scan
         id: trivy-image-scan
         run: |
-          trivy image don361/media-auth:latest
-          trivy image don361/media-converter:latest
-          trivy image don361/media-gateway:latest
-          trivy image don361/media-notification:latest
+          trivy image $DOCKERHUB_USERNAME/media-auth:latest
+          trivy image $DOCKERHUB_USERNAME/media-converter:latest
+          trivy image $DOCKERHUB_USERNAME/media-gateway:latest
+          trivy image $DOCKERHUB_USERNAME/media-notification:latest
 
       - name: Stop and Remove Old Container
         id: remove-old-container
