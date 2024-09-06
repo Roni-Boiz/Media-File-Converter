@@ -24,7 +24,8 @@ jobs:
           if [[ "$(minikube status --format "{{.Host}}")" == "Running" ]]; then
             echo "Minikube is already running."
           else
-            minikube start
+            nohup minikube start &
+            sleep 60
             minikube addons enable ingress
           fi
         shell: bash
@@ -151,11 +152,11 @@ jobs:
       - name: Deploy to Kubernetes
         id: deploy-to-k8s
         run: |
-          kubectl apply -f python/src/auth/manifests/
-          kubectl apply -f python/src/gateway/manifests/
-          kubectl apply -f python/src/converter/manifests/
-          kubectl apply -f python/src/notification/manifests/
           kubectl apply -f python/src/rabbit/manifests/
+          kubectl apply -f python/src/notification/manifests/
+          kubectl apply -f python/src/converter/manifests/
+          kubectl apply -f python/src/gateway/manifests/
+          kubectl apply -f python/src/auth/manifests/ 
 
       - name: Verify The Status
         id: k8s-status
