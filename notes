@@ -19,6 +19,8 @@ sudo ufw enable
 
 nslookup kubernetes-mp3converter.com
 
+SELECT User, Host FROM mysql.user;
+
 get token
 curl -X POST http://kubernetes-mp3converter.com/login -u don@email.com:admin1234
 
