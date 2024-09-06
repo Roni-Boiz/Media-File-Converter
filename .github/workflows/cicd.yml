@@ -44,6 +44,9 @@ jobs:
               # Define the desired entries for Minikube
               entries["kubernetes-mp3converter.com"] = 1
               entries["kubernetes-rabbitmq-manager.com"] = 1
+
+              # Define the additional entries
+              additional_entries["127.0.0.1"] = "kubernetes.docker.internal host.minikube.internal"
             }
             {
               # Print existing lines as they are
@@ -55,11 +58,26 @@ jobs:
                   delete entries[entry]
                 }
               }
+
+              # Check for additional entries
+              if ($1 in additional_entries) {
+                split(additional_entries[$1], names, " ")
+                for (i in names) {
+                  if ($2 == names[i]) {
+                    delete additional_entries[$1]
+                  }
+                }
+              }
             }
             END {
               # Add only the missing entries
               for (entry in entries) {
                 print minikube_ip, entry
+              }
+              
+              # Add additional entries if missing
+              for (ip in additional_entries) {
+                print ip, additional_entries[ip]
               }
             }
           ' /etc/hosts > /tmp/hosts.tmp && sudo mv /tmp/hosts.tmp /etc/hosts
@@ -150,3 +168,11 @@ jobs:
       - name: Verify The Status
         id: k8s-status
         run: kubectl get all
+
+      - name: Setup Minikube
+          id: setup-minikube
+          run: |
+            if [[ "$(minikube status --format "{{.Host}}")" == "Running" ]]; then
+              nohup minikube tunnel
+            fi
+          shell: bash
