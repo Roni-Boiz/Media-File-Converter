@@ -22,7 +22,7 @@ jobs:
         id: setup-minikube
         run: |
           STATUS=$(minikube status --format "{{.Host}}")
-          if "$STATUS" == "Running"; then
+          if [["$STATUS" == "Running"]]; then
             echo "Minikube is already running."
           else
             minikube start
