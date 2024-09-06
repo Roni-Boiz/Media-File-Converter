@@ -24,7 +24,7 @@ jobs:
       - name: Setup Minikube
         id: setup-minikube
         run: |
-          STATUS=$(minikube status --format "{{.Host}}")
+          STATUS=$(minikube status --format "{{.Host}}" 2>&1)
           echo "Minikube status: $STATUS"
           
           if [[ "$STATUS" == "Running" ]]; then
