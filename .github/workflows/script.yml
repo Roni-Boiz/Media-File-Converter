@@ -233,8 +233,9 @@ jobs:
       - name: Install K9s
         if: env.k9s_installed == 'false'
         run: |
-          sudo curl -sS https://webinstall.dev/k9s | bash
-          source ~/.config/envman/PATH.env
+          curl -sSLO https://github.com/derailed/k9s/releases/download/v0.26.6/k9s_Linux_x86_64.tar.gz
+          tar -xzf k9s_Linux_x86_64.tar.gz
+          sudo mv k9s /usr/local/bin/
           echo "k9s_installed=true" >> $GITHUB_ENV
           echo "K9s installed successfully!"
 
