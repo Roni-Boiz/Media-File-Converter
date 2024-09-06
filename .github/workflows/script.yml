@@ -234,7 +234,7 @@ jobs:
         if: env.k9s_installed == 'false'
         run: |
           sudo curl -sS https://webinstall.dev/k9s | bash
-          sudo source ~/.config/envman/PATH.env
+          source ~/.config/envman/PATH.env
           echo "k9s_installed=true" >> $GITHUB_ENV
           echo "K9s installed successfully!"
 
