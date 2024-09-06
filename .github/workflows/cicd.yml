@@ -28,6 +28,7 @@ jobs:
             minikube start
             minikube addons enable ingress
           fi
+        shell: bash
 
       - name: Read Minikube IP
         id: minikube-ip
