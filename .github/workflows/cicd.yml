@@ -21,7 +21,7 @@ jobs:
       - name: Setup Minikube
         id: setup-minikube
         run: |
-          status=$(minikube status --format "{{.Host}}")
+          status=$(minikube status)
 
           if $status == "Running"; then
             echo "Minikube is already running."
