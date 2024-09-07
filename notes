@@ -21,16 +21,13 @@ nslookup kubernetes-mp3converter.com
 
 SELECT User, Host FROM mysql.user;
 
-get token
+/login
 curl -X POST http://kubernetes-mp3converter.com/login -u don@email.com:admin1234
 
-Token
-eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImRvbkBlbWFpbC5jb20iLCJleHAiOjE3MjA1MDc0OTgsImlhdCI6MTcyMDQyMTA5OCwiYWRtaW4iOnRydWV9.rCGu30NFr7lHLQ4USTk2SSKJwbUZ54Uyin2_Tlor_D4
+/upload
+curl -X POST -F 'file=@./TEDx1.mp4' -H 'Authorization: Bearer <token>' "http://kubernetes-mp3converter.com/upload"
 
-upload file
-curl -X POST -F 'file=@./TEDx1.mp4' -H 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImRvbkBlbWFpbC5jb20iLCJleHAiOjE3MjA1NDM4MDgsImlhdCI6MTcyMDQ1NzQwOCwiYWRtaW4iOnRydWV9.n02BFafFDPKOf-AZDWiU5jWzHtvpLBxmaRXrn7iqN8U' "http://kubernetes-mp3converter.com/upload"
+/download
+mongofiles --db=mp3s get_id --local=convert.mp3 '{"$oid": "668cdeb991c26ae3a87ee770"}'
 
-Download the mp3 -> mp3_file_id
-mongofiles --db=mp3s get_id --local=convert.mp3s '{"$oid": "668cdeb991c26ae3a87ee770"}'
-
-curl --output convert.mp3 -X GET -H 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImRvbkBlbWFpbC5jb20iLCJleHAiOjE3MjA1NDM4MDgsImlhdCI6MTcyMDQ1NzQwOCwiYWRtaW4iOnRydWV9.n02BFafFDPKOf-AZDWiU5jWzHtvpLBxmaRXrn7iqN8U' "http://kubernetes-mp3converter.com/download?fid=<mp3_file_id>"
+curl --output convert.mp3 -X GET -H 'Authorization: Bearer <token>' "http://kubernetes-mp3converter.com/download?fid=<mp3_file_id>"
