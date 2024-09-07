@@ -95,7 +95,7 @@ jobs:
         id: setup-mogodb-binds
         run: |
           CONFIG_FILE="/etc/mongod.conf"
-          sudo sed -i 's/^[[:space:]]*bindIp:[[:space:]]*.*$/bindIp: 0.0.0.0/' $CONFIG_FILE
+          sudo sed -i 's/^\([[:space:]]*bindIp:[[:space:]]*\).*/\1 0.0.0.0/' $CONFIG_FILE
           sudo systemctl restart mongod
 
   build:
