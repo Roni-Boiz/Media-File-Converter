@@ -411,11 +411,11 @@ Run the application through the following API calls:
 
 **Launch an EC2 Instance**
 
-image
+![ec2-instance](https://github.com/user-attachments/assets/4f1912f1-64c5-4d2f-a714-dcd4ccf3eb8e)
 
 Enable folowing inbound ports
 
-image
+![ec2-ports](https://github.com/user-attachments/assets/36f92090-a926-45b7-99a7-103dc9e03595)
 
 **Setup Self-Hosted Runner**
 
@@ -441,24 +441,61 @@ $ ./config.sh --url https://github.com/Roni-Boiz/Media-File-Converter --token <y
 $ ./run.sh
 ```
 
+![runner-1](https://github.com/user-attachments/assets/4648db78-5edb-48f2-a16f-cc4013895ca1)
+
+![runner-2](https://github.com/user-attachments/assets/1f94267a-6223-4d6a-8e03-7948c79eb419)
+
+
 **Run Script Workflow**
 
-image
+![script-pipeline](https://github.com/user-attachments/assets/8c947298-a16d-4e26-8598-09384aba01fc)
 
 **Setup SonarQube Scanner**
+
+![partial-script](https://github.com/user-attachments/assets/999039df-181c-4090-99f0-9fe5745927ec)
 
 ```bash
 $ docker run -d --name sonar -p 9000:9000 sonarqube:lts-community
 ```
 
-image
+![sonar-1](https://github.com/user-attachments/assets/fb02fcae-3ec4-4b33-892f-4892af0d46a8)
+
+![sonar-2](https://github.com/user-attachments/assets/f37270d3-c354-4913-83ce-22f910ca3983)
+
+![sonar-3](https://github.com/user-attachments/assets/c8283da1-5c88-4520-ad61-2e6889a0b686)
+
+![sonar-4](https://github.com/user-attachments/assets/08205114-059b-4006-9a0b-f0fcd2328183)
+
+![sonar-5](https://github.com/user-attachments/assets/d1f2f225-7251-4dfb-a10b-fad377b6a5c2)
+
+![sonar-6](https://github.com/user-attachments/assets/bb558530-ceac-4ed0-bb0c-593736093374)
+
+![sonar-7](https://github.com/user-attachments/assets/73cd2541-f232-4d95-bd85-f32b1e87ed1b)
+
+![sonar-8](https://github.com/user-attachments/assets/c64ec1da-b578-41b4-9a70-dd4fcac7cf4c)
+
+![sonar-9](https://github.com/user-attachments/assets/a551a248-e005-4217-ad88-f65a16bf2cd5)
+
+![sonar-10](https://github.com/user-attachments/assets/ca073e80-099c-444c-9a1e-3917de4c9920)
+
+![sonar-11](https://github.com/user-attachments/assets/3a71eb5c-7012-4292-a8de-931607bb4ca2)
+
+![sonar-output](https://github.com/user-attachments/assets/df881914-bd95-4928-80a4-2d03d76fd06d)
+
+**Setup Docker**
+
+![docker-1](https://github.com/user-attachments/assets/9979bcba-ac43-4d58-8678-9c09a872fca6)
+
+![docker-2](https://github.com/user-attachments/assets/de8a9396-842a-461d-9651-b87f57322e0d)
+
+![docker-3](https://github.com/user-attachments/assets/b9ebc4e7-959a-4ed0-b10d-ea9c9e5d5d8e)
 
 **Run CICD Wordflow**
 
-image
+![cicd-pipeline](https://github.com/user-attachments/assets/36852e57-6a33-4df6-bc28-37b4a489ce62)
 
 > [!NOTE]
-> Before run this pipeline please update the image names with the onces created during the pipeline.
+> Before run this pipeline please update the image names with the onces created during the pipeline. The pipeline will execute infinitely at strat tunnel step (last step) otherview you need to start the tunnel manually.
 
 FIles need to be updated:
 - auth-deploy.yaml --> (image: don361/kubernetes-media-auth:1.0)
@@ -468,11 +505,21 @@ FIles need to be updated:
 
 Also make sure that you have set the `GMAIL_ADDRESS` and `GMAIL_PASSWORD` in `notification/manifests/notification-secret.yaml` as specifine in notification configuration. Moreover, with a working email in `auth/init.sql`
 
+However you can update them run time as well:
+
+![update-user-email](https://github.com/user-attachments/assets/95c908ad-bf0b-48a5-8976-94c4e47817d3)
+
+![update-notification-secret](https://github.com/user-attachments/assets/48506ba1-a878-43b8-9b47-65ab97143377)
+
+![notification-secret](https://github.com/user-attachments/assets/47c3f851-122c-491e-b9a7-d6eb64b7c5d7)
+
+![verify-notification-secret-update](https://github.com/user-attachments/assets/90db480a-119b-45ec-bbbd-fcd307e5a13c)
+
 **Test Application**
 
 Run the application through the following API calls:
 
-image
+![ec2-login-upload-download](https://github.com/user-attachments/assets/02123d8f-f80a-4e61-91d5-ad89c93fdcc4)
 
 - **Login Endpoint**
 
@@ -505,7 +552,7 @@ image
 
 **Run Destroy Workflow**
 
-image
+![destroy-pipeline](https://github.com/user-attachments/assets/12c20a5b-9e3d-482d-94bf-23b7a819d55a)
 
 **Remove Self-Hosted Runner**
 
@@ -514,8 +561,10 @@ image
 $ ./config.sh remove --token <your-token>
 ```
 
-image
+![runner-remove-1](https://github.com/user-attachments/assets/5fe41d01-c3d8-4c53-9be5-d6d4630f7e5e)
+
+![runner-remove-2](https://github.com/user-attachments/assets/2ce0507a-f4c1-4e62-a940-8d3663d7a5ea)
 
 **Terminate the Instance**
 
-image
+![terminate-instance](https://github.com/user-attachments/assets/db4c4438-b200-46a7-a1b6-b801c1e3ba41)
