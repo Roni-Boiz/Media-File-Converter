@@ -28,7 +28,7 @@ curl -X POST http://kubernetes-mp3converter.com/login -u don@email.com:admin1234
 curl -X POST -F 'file=@./TEDx1.mp4' -H 'Authorization: Bearer <token>' "http://kubernetes-mp3converter.com/upload"
 
 /download
-mongofiles --db=mp3s get_id --local=convert.mp3 '{"$oid": "668cdeb991c26ae3a87ee770"}'
+mongofiles --db=mp3s get_id --local=convert.mp3 '{"$oid": "fid"}'
 
 curl --output convert.mp3 -X GET -H 'Authorization: Bearer <token>' "http://kubernetes-mp3converter.com/download?fid=<mp3_file_id>"
 
