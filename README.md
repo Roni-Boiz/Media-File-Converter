@@ -305,6 +305,8 @@ Run the application through the following API calls:
 
     - Output: Audio (mp3)
 
+      https://github.com/user-attachments/assets/1a73c66a-5ce0-42e3-92ff-8e91e827aa03
+
       <audio controls>
         <source src="./convert1.mp3" type="audio/mp3">
         Your browser does not support the audio tag.
@@ -315,6 +317,8 @@ Run the application through the following API calls:
     - Input: Video (src="./TEDx2.mp4")
 
     - Output: Audio (mp3)
+  
+      https://github.com/user-attachments/assets/04cdbcd4-b86a-4f34-be55-bfade6b2a4c0
 
       <audio controls>
         <source src="./convert2.mp3" type="audio/mp3">
@@ -326,6 +330,8 @@ Run the application through the following API calls:
     - Input: Video (src="./TEDx3.mp4")
 
     - Output: Audio (mp3)
+  
+      https://github.com/user-attachments/assets/5a0ee3fe-d3e4-4913-9b1a-601246450066
 
       <audio controls>
         <source src="./convert3.mp3" type="audio/mp3">
