@@ -83,12 +83,20 @@ jobs:
             }
           ' /etc/hosts > /tmp/hosts.tmp && sudo mv /tmp/hosts.tmp /etc/hosts
 
-      - name: Setup Binds
-        id: setup-binds
+      - name: Setup MySQL Binds
+        id: setup-mysql-binds
         run: |
           CONFIG_FILE="/etc/mysql/mysql.conf.d/mysqld.cnf"
           sudo sed -i 's/^[[:space:]]*bind-address[[:space:]]*=[[:space:]]*.*$/bind-address = 0.0.0.0/' $CONFIG_FILE
           sudo sed -i 's/^[[:space:]]*mysqlx-bind-address[[:space:]]*=[[:space:]]*.*$/mysqlx-bind-address = 0.0.0.0/' $CONFIG_FILE
+          sudo systemctl restart mysql
+
+      - name: Setup MongoDB Binds
+        id: setup-mogodb-binds
+        run: |
+          CONFIG_FILE="/etc/mongod.conf"
+          sudo sed -i 's/^[[:space:]]*bindIp:[[:space:]]*.*$/bindIp: 0.0.0.0/' $CONFIG_FILE
+          sudo systemctl restart mongod
 
   build:
     name: Build
@@ -185,6 +193,6 @@ jobs:
         id: start-tunnel
         run: |
           if [[ "$(minikube status --format "{{.Host}}")" == "Running" ]]; then
-            nohup minikube tunnel &
+            nohup minikube tunnel
           fi
         shell: bash
