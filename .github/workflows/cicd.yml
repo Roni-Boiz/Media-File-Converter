@@ -200,6 +200,6 @@ jobs:
         id: start-tunnel
         run: |
           if [[ "$(minikube status --format "{{.Host}}")" == "Running" ]]; then
-            nohup minikube tunnel
+            nohup sudo minikube tunnel > minikube_tunnel.log 2>&1 &
           fi
         shell: bash
