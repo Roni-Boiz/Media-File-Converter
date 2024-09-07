@@ -31,3 +31,7 @@ curl -X POST -F 'file=@./TEDx1.mp4' -H 'Authorization: Bearer <token>' "http://k
 mongofiles --db=mp3s get_id --local=convert.mp3 '{"$oid": "668cdeb991c26ae3a87ee770"}'
 
 curl --output convert.mp3 -X GET -H 'Authorization: Bearer <token>' "http://kubernetes-mp3converter.com/download?fid=<mp3_file_id>"
+
+restart services
+kubectl delete -f gateway/manifests/ -f auth/manifests/ -f notification/manifests/ -f converter/manifests/ -f rabbit/manifests/
+kubectl apply -f rabbit/manifests/ -f converter/manifests/ -f notification/manifests/ -f auth/manifests/ -f gateway/manifests/
