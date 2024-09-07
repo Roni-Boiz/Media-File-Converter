@@ -172,8 +172,8 @@ jobs:
         id: deploy-to-k8s
         run: |
           kubectl apply -f python/src/rabbit/manifests/
-          kubectl apply -f python/src/notification/manifests/
           kubectl apply -f python/src/converter/manifests/
+          kubectl apply -f python/src/notification/manifests/
           kubectl apply -f python/src/auth/manifests/
           kubectl apply -f python/src/gateway/manifests/
 

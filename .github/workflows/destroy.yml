@@ -16,11 +16,11 @@ jobs:
       - name: Destroy Kubernetes Deployments
         id: destroy-from-k8s
         run: |
-          kubectl delete -f python/src/rabbit/manifests/ || true
+          kubectl delete -f python/src/gateway/manifests/ || true
+          kubectl delete -f python/src/auth/manifests/ || true
           kubectl delete -f python/src/notification/manifests/ || true
           kubectl delete -f python/src/converter/manifests/ || true
-          kubectl delete -f python/src/auth/manifests/ || true
-          kubectl delete -f python/src/gateway/manifests/ || true
+          kubectl delete -f python/src/rabbit/manifests/ || true
 
       - name: Destry Kubernetes CLuster
         id: destry-cluster
