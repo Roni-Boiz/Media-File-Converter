@@ -98,13 +98,6 @@ jobs:
           sudo sed -i 's/^[[:space:]]*bindIp:[[:space:]]*.*$/bindIp: 0.0.0.0/' $CONFIG_FILE
           sudo systemctl restart mongod
 
-      - name: Setup Firewall Rules
-        id: setup-firewall-rules
-        run: |
-          sudo ufw allow from "$MINIKUBE_IP" to any port 3306
-          sudo ufw allow from "$MINIKUBE_IP" to any port 27017
-          sudo ufw --force enable
-
   build:
     name: Build
     needs: Setup
@@ -200,6 +193,6 @@ jobs:
         id: start-tunnel
         run: |
           if [[ "$(minikube status --format "{{.Host}}")" == "Running" ]]; then
-            nohup sudo minikube tunnel > minikube_tunnel.log 2>&1 &
+            nohup minikube tunnel
           fi
         shell: bash
