@@ -1,7 +1,7 @@
 # Microservice Project: Video-Audio Converter
-Converting mp4 videos to mp3 in a microservices architecture.
+Converting mp4 videos to mp3 in a microservice architecture.
 
-image
+![micro-service-media-converter](https://github.com/user-attachments/assets/0bb4e83f-1d2e-4acb-b55b-bacf21fe1e9b)
 
 ## Deploying a Python-based Microservice Application on Local Minikube Kubernetes Cluster
 
@@ -34,7 +34,7 @@ Follow these steps to deploy your microservice application:
    ```
 
 > [!NOTE]
-> Before that command make sure you have update the email with an actual email rather than dummy or fake email because you will receive an email with the *file_id* to download the converted mp3 file. 
+> Before that command make sure you have update the email with an actual email rather than dummy or fake email because later you will receive an email with the *file_id* to download the converted mp3 file. 
 
 3. **RabbitMQ Deployment:** Deploy RabbitMQ for message queuing, which is required for the `converter`.
 
@@ -60,7 +60,7 @@ Follow these steps to deploy your microservice application:
     ```
   
 > [!NOTE]
-> Please start service in order `rabbit --> converter --> notification --> auth --> gateway` and wait till previous service in ready to start the next service.
+> Please start service in order `rabbit --> converter --> notification --> auth --> gateway` and wait till previous service in ready to start the next one.
 
 6. **Application Validation:** Verify the status of all components by running:
     ```bash
@@ -89,6 +89,8 @@ Follow these steps to deploy your microservice application:
 
     $ minikube addons enable ingress
     ```
+    
+    ![minikube-1](https://github.com/user-attachments/assets/dcb534e8-369f-4cac-b024-dc1ce9469c3f)
 
     ```
     $ sudo vim /etc/hosts
@@ -121,30 +123,41 @@ Apply the manifest files for each microservice:
   $ cd rabbit/manifests
   $ kubectl apply -f .
   ```
+  
+  ![rabbitmq-1](https://github.com/user-attachments/assets/b16c5bf5-8690-4497-b021-ff4217cacb4d)
 
   - **Converter Service:**
   ```
   $ cd converter/manifests
   $ kubectl apply -f .
   ```
+  
+  ![converter-1](https://github.com/user-attachments/assets/1e4928d1-51a3-4d16-93d7-31f9ad25bfc3)
 
 - **Notification Service:**
   ```
   $ cd notification/manifests
   $ kubectl apply -f .
   ```
+  
+  ![notification-1](https://github.com/user-attachments/assets/359c7533-e034-452d-a3bf-e813a9ae359a)
+
 
 - **Auth Service:**
   ```
   $ cd auth/manifests
   $ kubectl apply -f .
   ```
+  
+  ![auth-1](https://github.com/user-attachments/assets/59ca2163-c50a-429d-90ce-1a7f504b6baf)
 
 - **Gateway Service:**
   ```
   $ cd gateway/manifests
   $ kubectl apply -f .
   ```
+  
+  ![gateway-1](https://github.com/user-attachments/assets/792a30c6-2a52-498d-9a87-bf2cc9c98f9d)
 
 #### Application Validation
 
@@ -153,6 +166,8 @@ After deploying the microservices, verify the status of all components by runnin
 ```
 $ kubectl get all
 ```
+
+![k9s](https://github.com/user-attachments/assets/2fdec9a6-3bf6-4508-8f71-43f209fc178e)
 
 ### Notification Configuration
 
@@ -223,47 +238,64 @@ $ kubectl scale deployment --replicas=1 auth gateway converter notification
 
 Run the application through the following API calls:
 
+![curl-login-upload-download](https://github.com/user-attachments/assets/06dd5afe-4620-45c2-bcd5-5d12d37d2026)
+
 - **Login Endpoint**
-  ```http request
-  POST http://kubernetes-mp3converter.com/login
-  ```
-  image
 
   ```console
   $ curl -X POST http://kubernetes-mp3converter.com/login -u <mysql_user_email>:<mysql_user_password>
-  ``` 
-
-  image
+  ```
+  
+  ```http request
+  POST http://kubernetes-mp3converter.com/login
+  ```
+  
+  ![postman-login](https://github.com/user-attachments/assets/2f859722-aca9-456a-b540-0898919334be)
 
   Expected output: JWT Token!
 
 - **Upload Endpoint**
 
-  ```http request
-  POST http://kubernetes-mp3converter.com/upload
-  ```
-
-  image
-
   ```bash
   $ curl -X POST -F 'file=@./video.mp4' -H 'Authorization: Bearer <token>' "http://kubernetes-mp3converter.com/upload"
   ```
 
-  image
+  ```http request
+  POST http://kubernetes-mp3converter.com/upload
+  ```
+
+  ![postman-upload-1](https://github.com/user-attachments/assets/c9ff35f5-e6c8-4028-af67-74087ea3bb24)
+
+  ![postman-upload-2](https://github.com/user-attachments/assets/495d2b4b-e952-45d7-ba93-9e147d75f05d)
+
+  ![rabbitmq-queue](https://github.com/user-attachments/assets/92df89ea-8bb5-4508-8231-b0ec38ea5c30)
+
+  ![email-notification](https://github.com/user-attachments/assets/d759a59c-c139-4e76-a713-b7f16067c548)
   
-  Expected output: An email with `file_id` to download the coverted file.
+  Expected output: Success. An email with `file_id` to download the coverted file.
+
+  ![mongo-1](https://github.com/user-attachments/assets/443d54cf-24fe-4eb2-9edd-41c177766ae9)
+
+  ![mongo-2](https://github.com/user-attachments/assets/bf719c8a-8142-4584-95bf-617b35501d34)
 
 - **Download Endpoint**
 
+  ```bash
+  $ curl --output convert.mp3 -X GET -H 'Authorization: Bearer <token>' "http://kubernetes-mp3converter.com/download?fid=<Generated fid>"
+  ```
+  
   ```http request
   GET http://kubernetes-mp3converter.com/download?fid=<Generated file identifier>
   ```
 
-  image
+  ![postman-download-1](https://github.com/user-attachments/assets/7f75016a-589e-475b-838f-65a741b480ba)
+  
+  ![postman-download-2](https://github.com/user-attachments/assets/a2e71927-3885-41eb-ab64-85fa0b0b5d34)
 
-  ```bash
-  $ curl --output convert.mp3 -X GET -H 'Authorization: Bearer <token>' "http://kubernetes-mp3converter.com/download?fid=<Generated fid>"
-  ``` 
+  Expected output: Mp3 file should be save to current directory.
+
+  ![mongo-3](https://github.com/user-attachments/assets/04d18f0e-b047-427d-8d37-940b0e576611)
+  
 
 ### Test Cases
 
@@ -307,12 +339,16 @@ Run the application through the following API calls:
   $ cd gateway/manifests
   $ kubectl delete -f .
   ```
+  
+  ![gateway-2](https://github.com/user-attachments/assets/d84a80de-c86a-478e-aca5-14e75dc8c5dc)
 
 - **Auth Service:**
   ```
   $ cd auth/manifests
   $ kubectl delete -f .
   ```
+  
+  ![auth-2](https://github.com/user-attachments/assets/910c2e50-f111-4312-9969-91f8cab29a64)
 
 - **Notification Service:**
   ```
@@ -320,11 +356,15 @@ Run the application through the following API calls:
   $ kubectl delete -f .
   ```
 
+  ![notification-2](https://github.com/user-attachments/assets/17682d6d-60ed-4cc4-a803-2bcb23160eef)
+
 - **Converter Service:**
   ```
   $ cd converter/manifests
   $ kubectl delete -f .
   ```
+
+  ![converter-2](https://github.com/user-attachments/assets/5cef65ba-d4ad-4b06-b4e6-111e2263a566)
 
 - **rabbitmq Service:**
   ```
@@ -332,10 +372,14 @@ Run the application through the following API calls:
   $ kubectl delete -f .
   ```
 
+  ![rabbitmq-2](https://github.com/user-attachments/assets/16bb736e-4819-47ee-9c01-45bb7c63ba22)
+
 - **minikube:**
   ```
   minikube delete --all
   ```
+
+  ![minikube-2](https://github.com/user-attachments/assets/dcfd5da8-0ad1-461a-8471-6293477150f1)
 
 
 ## Deploying a Python-based Microservice Application on EC2 Instance Kubernetes Cluster
