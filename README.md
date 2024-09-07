@@ -283,7 +283,7 @@ Run the application through the following API calls:
 
   ![postman-upload-2](https://github.com/user-attachments/assets/495d2b4b-e952-45d7-ba93-9e147d75f05d)
 
-  ![rabbitmq-queue](https://github.com/user-attachments/assets/92df89ea-8bb5-4508-8231-b0ec38ea5c30)
+  ![rabbitmq-queue](https://github.com/user-attachments/assets/f04306c0-ca7c-48af-8ae2-e6b2497b235b)
 
   ![email-notification](https://github.com/user-attachments/assets/d759a59c-c139-4e76-a713-b7f16067c548)
   
