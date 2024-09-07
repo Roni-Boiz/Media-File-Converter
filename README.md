@@ -112,6 +112,21 @@ Follow these steps to deploy your microservice application:
   Update following two lines in mysqld.cnf file
   bind-address		= 0.0.0.0
   mysqlx-bind-address	= 0.0.0.0
+
+  $ sudo systemctl restart mysql
+  ```
+
+  **Set MongoDB Hosts:**
+
+  Allow remote access form all host to MySQL
+
+  ```bash
+  $ sudo vim /etc/mongod.conf
+
+  Update following line in mongod.conf file
+  bindIp: 0.0.0.0
+
+  sudo systemctl restart mongod
   ```
 
 #### Cluster Creation
@@ -294,6 +309,10 @@ Run the application through the following API calls:
 
   Expected output: Mp3 file should be save to current directory.
 
+  ```bash
+  mongofiles --db=mp3s get_id --local=convert-mongo.mp3 '{"$oid": "fid"}'
+  ```
+
   ![mongo-3](https://github.com/user-attachments/assets/04d18f0e-b047-427d-8d37-940b0e576611)
   
 
@@ -439,7 +458,7 @@ image
 image
 
 > [!NOTE]
-> Please update the image names with the onces created during the workflow.
+> Before run this pipeline please update the image names with the onces created during the pipeline.
 
 FIles need to be updated:
 - auth-deploy.yaml --> (image: don361/kubernetes-media-auth:1.0)
@@ -447,17 +466,19 @@ FIles need to be updated:
 - gateway-deploy.yaml --> (image: don361/kubernetes-media-gateway:1.0)
 - notification-deploy.yaml --> (image: don361/kubernetes-media-notification:1.0)
 
+Also make sure that you have set the `GMAIL_ADDRESS` and `GMAIL_PASSWORD` in `notification/manifests/notification-secret.yaml` as specifine in notification configuration. Moreover, with a working email in `auth/init.sql`
+
 **Test Application**
 
 Run the application through the following API calls:
 
+image
+
 - **Login Endpoint**
 
-  ```console
+  ```bash
   $ curl -X POST http://kubernetes-mp3converter.com/login -u <mysql_user_email>:<mysql_user_password>
   ``` 
-
-  image
 
   Expected output: JWT Token!
 
@@ -466,8 +487,6 @@ Run the application through the following API calls:
   ```bash
   $ curl -X POST -F 'file=@./video.mp4' -H 'Authorization: Bearer <token>' "http://kubernetes-mp3converter.com/upload"
   ```
-
-  image
   
   Expected output: An email with `file_id` to download the coverted file.
 
@@ -477,7 +496,12 @@ Run the application through the following API calls:
   $ curl --output convert.mp3 -X GET -H 'Authorization: Bearer <token>' "http://kubernetes-mp3converter.com/download?fid=<Generated fid>"
   ``` 
 
-  image
+  ```bash
+  mongofiles --db=mp3s get_id --local=convert-mongo.mp3 '{"$oid": "fid"}'
+  ```
+
+> [!WARNING]
+> If you get `internal server error` as an output please restart the gateway service.
 
 **Run Destroy Workflow**
 
@@ -489,6 +513,8 @@ image
 // Remove the runner
 $ ./config.sh remove --token <your-token>
 ```
+
+image
 
 **Terminate the Instance**
 
