@@ -20,7 +20,10 @@ mongo_mp3 = PyMongo(
 fs_videos = gridfs.GridFS(mongo_video.db)
 fs_mp3s = gridfs.GridFS(mongo_mp3.db)
 
-connection = pika.BlockingConnection(pika.ConnectionParameters("rabbitmq"))
+connection = pika.BlockingConnection(pika.ConnectionParameters(
+    "rabbitmq",
+    heartbeat=60
+))
 channel =  connection.channel()
 
 channel.queue_declare(os.environ.get("VIDEO_QUEUE"), durable=True, exclusive=False)
@@ -48,8 +51,22 @@ def login():
     else:
         return err
 
+def reconnect_channel():
+    try:
+        connection = pika.BlockingConnection(pika.ConnectionParameters(
+            "rabbitmq",
+            heartbeat=60
+        ))
+        channel = connection.channel()
+        return channel
+    except pika.exceptions.AMQPConnectionError as e:
+        print(f"Connection failed: {e}")
+        return None
+
 @server.route("/upload", methods=["POST"])
 def upload():
+    global channel
+    
     access, err = validate.token(request)
 
     if err:
@@ -60,6 +77,10 @@ def upload():
     if access["admin"]:
         if len(request.files) > 1 or len(request.files) < 1:
             return "only 1 file is allowed", 400
+
+        # Reconnect if the channel is closed
+        if channel is None or channel.is_closed:
+            channel = reconnect_channel()
         
         for _, f in request.files.items():
             err = util.upload(f, fs_videos, channel, access)
