@@ -88,6 +88,8 @@ Follow these steps to deploy your microservice application:
     $ minikube addons list
 
     $ minikube addons enable ingress
+
+    $ minikube tunnel
     ```
     
     ![minikube-1](https://github.com/user-attachments/assets/dcb534e8-369f-4cac-b024-dc1ce9469c3f)
